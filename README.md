@@ -1,7 +1,11 @@
 Реализация спецификации https://tradeapi.finam.ru/docs/guides/rest/
+
 Для запуска необходим secret.token получаемый на вкладке https://tradeapi.finam.ru/docs/tokens
+
 secret.token передается через переменную окружения secret.key=${SECRET_KEY}, без него приложение не запустится. 
-По secret.token автоматически создаются и обновляются jwt-токены для выполнения запросов, переменная в application.properties - refresh.token.interval.ms.
+
+С помощью secret.token автоматически создаются и обновляются jwt-токены для выполнения запросов, чтобы изменить время обновления токенов нужно поменять значение переменной в application.properties - refresh.token.interval.ms.
+
 Для использования приложения необходимо закодировать значение api-ключа через любой сервис кодировки. Например https://bcrypt-generator.com
 В переменную окружения hash.api.key=${API_KEY} вводим закодированное значение и далее в интерфейсе, на кнопке Authorize используем без кодировки.
 Пример:
