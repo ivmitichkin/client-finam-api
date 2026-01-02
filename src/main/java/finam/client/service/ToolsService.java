@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -78,7 +79,7 @@ public class ToolsService {
     /**
      * Метод для получения информации о конкретном финансовом инструменте (акции).
      *
-     * @param symbol   символ финансового инструмента
+     * @param symbol    символ финансового инструмента
      * @param accountId уникальный идентификатор аккаунта
      * @return объект-обертка с информацией о выбранном активе
      */
@@ -126,7 +127,7 @@ public class ToolsService {
     /**
      * Метод для получения параметров конкретного финансового инструмента.
      *
-     * @param symbol   символ финансового инструмента
+     * @param symbol    символ финансового инструмента
      * @param accountId уникальный идентификатор аккаунта
      * @return объект-обертка с параметрами выбранного актива
      */
@@ -140,7 +141,7 @@ public class ToolsService {
                 .bodyToMono(String.class)
                 .flatMap(json -> {
                     try {
-                        GetAssetParamsResponseDTO dto = objectMapper.readValue(json, GetAssetParamsResponseDTO.class); // Десериализация
+                        GetAssetParamsResponseDTO dto = objectMapper.readValue(json, GetAssetParamsResponseDTO.class);
                         return Mono.just(ResponseEntity.ok(dto));
                     } catch (Exception ex) {
                         log.error("Error parsing JSON to GetAssetParamsResponseDTO", ex);
@@ -152,19 +153,51 @@ public class ToolsService {
     /**
      * Метод для получения цепочки опционов для базового актива.
      *
-     * @param underlyingSymbol символ базового актива
+     * @param underlyingSymbol символ базового актива;
+     * @param root             Опциональный параметр. Актуален для опционов на фьючерсы, по типу (недельные, месячные). Если параметр не указан, будут возвращены опционы с ближайшей датой экспирации.
+     * @param expirationDate   Опциональный фильтр по дате экспирации опционов. Если параметр не указан, будут возвращены опционы с ближайшей датой экспирации.
      * @return объект-обертка с информацией о цепочке опционов
      */
-    public Mono<ResponseEntity<OptionsChainResponseDTO>> getOptionsChain(String underlyingSymbol) {
+    public Mono<ResponseEntity<OptionsChainResponseDTO>> getOptionsChain(String underlyingSymbol, String root, String expirationDate) {
+
+        if (underlyingSymbol.isEmpty()) {
+            log.error("Underlying symbol is empty");
+            return Mono.error(new RuntimeException("Underlying symbol is empty"));
+        }
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/v1/assets/" + underlyingSymbol + "/options");
+        Integer year = null;
+        Integer month = null;
+        Integer day = null;
+
+        if (!expirationDate.isEmpty()) {
+            year = Integer.parseInt(expirationDate.substring(0, 4));
+            month = Integer.parseInt(expirationDate.substring(5, 6));
+            day = Integer.parseInt(expirationDate.substring(7, 9));
+        }
+
+        if (!root.isBlank()) {
+            builder.queryParam("root", root);
+        }
+        if (year != null && !year.equals("")) {
+            builder.queryParam("year", year);
+        }
+        if (month != null && !month.equals("")) {
+            builder.queryParam("month", month);
+        }
+        if (day != null && !day.equals("")) {
+            builder.queryParam("day", day);
+        }
+
         log.info("Fetching options chain for underlying symbol: {}", underlyingSymbol);
         return authenticatedWebClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/v1/assets/" + underlyingSymbol + "/options").build())
+                .uri(builder.build().toUriString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMap(json -> {
                     try {
-                        OptionsChainResponseDTO dto = objectMapper.readValue(json, OptionsChainResponseDTO.class); // Десериализация
+                        OptionsChainResponseDTO dto = objectMapper.readValue(json, OptionsChainResponseDTO.class);
                         return Mono.just(ResponseEntity.ok(dto));
                     } catch (Exception ex) {
                         log.error("Error parsing JSON to OptionsChainResponseDTO", ex);

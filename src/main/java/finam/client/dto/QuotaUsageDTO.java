@@ -14,14 +14,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OptionsChainRequestDTO {
-    @JsonProperty("underlying_symbol")
-    private String underlyingSymbol;
+public class QuotaUsageDTO {
 
-    @JsonProperty("root")
-    private String root;
+    @JsonProperty("name")
+    private String name;
 
-    @JsonProperty("expiration_date")
-    private YearMonthDayDTO expirationDate;
+    @JsonProperty("limit")
+    private long limit;
+
+    @JsonProperty("remaining")
+    private long remaining;
+
+    @JsonProperty("reset_time")
+    private String resetTime;
 
 }

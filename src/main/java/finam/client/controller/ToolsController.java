@@ -41,8 +41,8 @@ public class ToolsController {
     @Operation(
             summary = "Получение списка активов",
             description = """
-                Загружает полный список финансовых инструментов (активов).
-                """,
+                    Загружает полный список финансовых инструментов (активов).
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список активов успешно возвращён.")
             }
@@ -60,8 +60,8 @@ public class ToolsController {
     @Operation(
             summary = "Получение текущего серверного времени",
             description = """
-                Определяет текущее время сервера Finam.
-                """,
+                    Определяет текущее время сервера Finam.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Серверное время получено.")
             }
@@ -74,7 +74,7 @@ public class ToolsController {
     /**
      * Метод для получения конкретной информации о финансовом инструменте.
      *
-     * @param symbol   символ актива;
+     * @param symbol    символ актива;
      * @param accountId уникальный идентификатор аккаунта;
      * @return информация о выбранном активе.
      */
@@ -82,10 +82,10 @@ public class ToolsController {
     @Operation(
             summary = "Получение информации о финансовом инструменте",
             description = """
-                Возвращает информацию о конкретном финансовом инструменте.
-                Необходимы тикер инструмента и идентификатор аккаунта.
-                Если актив не найден, возвращает ошибку 404.
-                """,
+                    Возвращает информацию о конкретном финансовом инструменте.
+                    Необходимы тикер инструмента и идентификатор аккаунта.
+                    Если актив не найден, возвращает ошибку 404.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Информация о выбранном активе предоставлена."),
                     @ApiResponse(responseCode = "404", description = "Актив не найден.")
@@ -106,8 +106,8 @@ public class ToolsController {
     @Operation(
             summary = "Получение списка бирж",
             description = """
-                Возвращает перечень используемых в торговле бирж.
-                """,
+                    Возвращает перечень используемых в торговле бирж.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список бирж возвращён.")
             }
@@ -120,17 +120,17 @@ public class ToolsController {
     /**
      * Метод для получения параметров финансового инструмента.
      *
-     * @param symbol   символ актива
+     * @param symbol    символ актива
      * @param accountId уникальный идентификатор аккаунта
      * @return параметры актива
      */
     @Operation(
             summary = "Получение параметров финансового инструмента",
             description = """
-                Получает расширенную информацию о финансовом инструменте.
-                В качестве параметров используется тикер актива и идентификатор аккаунта.
-                Возможна ошибка 404, если актив не найден.
-                """,
+                    Получает расширенную информацию о финансовом инструменте.
+                    В качестве параметров используется тикер актива и идентификатор аккаунта.
+                    Возможна ошибка 404, если актив не найден.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Параметры актива предоставлены."),
                     @ApiResponse(responseCode = "404", description = "Актив не найден.")
@@ -147,23 +147,31 @@ public class ToolsController {
      * Метод для получения цепочки опционов для базового актива.
      *
      * @param underlying_symbol символ базового актива;
+     * @param root Опциональный параметр. Актуален для опционов на фьючерсы, по типу (недельные, месячные). Если параметр не указан, будут возвращены опционы с ближайшей датой экспирации.
+     * @param expirationDate Опциональный фильтр по дате экспирации опционов. Если параметр не указан, будут возвращены опционы с ближайшей датой экспирации.
      * @return цепочка опционов.
      */
     @Operation(
             summary = "Получение цепочки опционов для базового актива",
             description = """
-                Загружает цепочку опционных контрактов для базового актива.
-                В параметрах указывается тикер базового актива.
-                При отсутствии данных вернется ошибка 404.
-                """,
+                    Загружает цепочку опционных контрактов для базового актива.
+                    В параметрах указывается тикер базового актива underlying_symbol,
+                    root - Опциональный параметр. Актуален для опционов на фьючерсы, по типу (недельные, месячные). Если параметр не указан, будут возвращены опционы с ближайшей датой экспирации.
+                    expirationDate - Опциональный фильтр по дате экспирации опционов в формате yyyy-mm-ss. Если параметр не указан, будут возвращены опционы с ближайшей датой экспирации.
+                    
+                    При отсутствии данных вернется ошибка 404.
+                    """,
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Цепочка опционов возвращена."),
+                    @ApiResponse(responseCode = "200", description = "Цепочка опциона/ов возвращена."),
                     @ApiResponse(responseCode = "404", description = "Базовый актив не найден.")
             }
     )
     @GetMapping(value = "/assets/{underlying_symbol}/options")
-    public Mono<ResponseEntity<OptionsChainResponseDTO>> getOptionsChain(@PathVariable String underlying_symbol) {
-        return toolsService.getOptionsChain(underlying_symbol);
+    public Mono<ResponseEntity<OptionsChainResponseDTO>> getOptionsChain(@PathVariable String underlying_symbol,
+                                                                         @RequestParam(name = "root", defaultValue = "") String root,
+                                                                         @RequestParam(name = "expiration_date", defaultValue = "") String expirationDate
+    ) {
+        return toolsService.getOptionsChain(underlying_symbol, root, expirationDate);
     }
 
     /**
@@ -175,10 +183,10 @@ public class ToolsController {
     @Operation(
             summary = "Расписание торговли инструментом",
             description = """
-                Извлекает график торговой сессии для выбранного финансового инструмента.
-                В параметрах принимает тикер инструмента.
-                Если инструмент не найден, возвращает ошибку 404.
-                """,
+                    Извлекает график торговой сессии для выбранного финансового инструмента.
+                    В параметрах принимает тикер инструмента.
+                    Если инструмент не найден, возвращает ошибку 404.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "График торговой сессии предоставлен."),
                     @ApiResponse(responseCode = "404", description = "Финансовый инструмент не найден.")
@@ -197,9 +205,9 @@ public class ToolsController {
     @Operation(
             summary = "Загрузка файла активов (.json)",
             description = """
-                Доступна точка загрузки файлов, содержащих список активов в формате JSON.
-                Вернется кликабельная ссылка (Download file) на загрузку assets.json
-                """,
+                    Доступна точка загрузки файлов, содержащих список активов в формате JSON.
+                    Вернется кликабельная ссылка (Download file) на загрузку assets.json
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Файл загружен успешно.")
             }
@@ -208,4 +216,5 @@ public class ToolsController {
     public ResponseEntity<byte[]> downloadAssetsFile() {
         return downloadService.downloadAssets();
     }
+
 }

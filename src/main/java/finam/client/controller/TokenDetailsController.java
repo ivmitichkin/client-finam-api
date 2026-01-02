@@ -1,6 +1,5 @@
 package finam.client.controller;
 
-
 import finam.client.dto.TokenDetailsResponseDTO;
 import finam.client.service.TokenDetailsService;
 import io.swagger.v3.oas.annotations.Operation;

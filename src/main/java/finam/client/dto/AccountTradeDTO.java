@@ -38,4 +38,7 @@ public class AccountTradeDTO {
 
     @JsonProperty("account_id")
     private String accountId;
+
+    @JsonProperty("comment")
+    private String comment;
 }

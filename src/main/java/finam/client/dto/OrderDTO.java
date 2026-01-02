@@ -22,30 +22,44 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class OrderDTO {
+
     @JsonProperty("account_id")
     private String accountId;
+
     @JsonProperty("symbol")
     private String symbol;
+
     @JsonProperty("quantity")
     private ValueObjectDTO quantity;
-    @JsonProperty("side")
-    private SideEnum side;
+
     @JsonProperty("type")
     private OrderTypeEnum type;
+
+    @JsonProperty("side")
+    private SideEnum side;
+
     @JsonProperty("time_in_force")
     private TimeInForceEnum timeInForce;
+
     @JsonProperty("limit_price")
     private ValueObjectDTO limitPrice;
+
     @JsonProperty("stop_price")
     private ValueObjectDTO stopPrice;
+
     @JsonProperty("stop_condition")
     private StopConditionEnum stopCondition;
+
     @JsonProperty("legs")
     private List<LegDTO> legs;
+
     @JsonProperty("client_order_id")
     private String clientOrderId;
+
     @JsonProperty("valid_before")
     private ValidBeforeEnum validBefore;
+
     @JsonProperty("comment")
     private String comment;
+
 }

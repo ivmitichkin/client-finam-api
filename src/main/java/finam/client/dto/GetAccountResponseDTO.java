@@ -46,4 +46,14 @@ public class GetAccountResponseDTO {
 
     @JsonProperty("portfolio_forts")
     private FortsDTO portfolioForts;
+
+    @JsonProperty("open_account_date")
+    private String openAccountDate;
+
+    @JsonProperty("first_trade_date")
+    private String firstTradeDate;
+
+    @JsonProperty("first_non_trade_date")
+    private String firstNonTradeDate;
+
 }

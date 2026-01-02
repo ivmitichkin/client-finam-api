@@ -15,18 +15,22 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class AssetsDTO {
-    @JsonProperty("symbol")
-    private String symbol;
+
     @JsonProperty("id")
     private String id;
+
     @JsonProperty("ticker")
     private String ticker;
+
     @JsonProperty("mic")
     private String mic;
+
     @JsonProperty("isin")
     private String isin;
+
     @JsonProperty("type")
     private String type;
+
     @JsonProperty("name")
     private String name;
 }

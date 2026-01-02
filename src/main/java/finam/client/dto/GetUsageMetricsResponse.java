@@ -14,14 +14,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OptionsChainRequestDTO {
-    @JsonProperty("underlying_symbol")
-    private String underlyingSymbol;
+public class GetUsageMetricsResponse {
 
-    @JsonProperty("root")
-    private String root;
-
-    @JsonProperty("expiration_date")
-    private YearMonthDayDTO expirationDate;
-
+    @JsonProperty("quotas")
+    private QuotaUsageDTO[] quotas;
 }

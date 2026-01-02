@@ -13,16 +13,22 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetAssetResponseDTO extends AssetsDTO {
+
     @JsonProperty("board")
     private String board;
+
     @JsonProperty("decimals")
     private Integer decimals;
+
     @JsonProperty("min_step")
     private Long minStep;
+
     @JsonProperty("lot_size")
     private ValueObjectDTO lotSize;
+
     @JsonProperty("expiration_date")
-    private String expirationDate;
+    private YearMonthDayDTO expirationDate;
+
     @JsonProperty("quote_currency")
     private String quoteCurrency;
 }

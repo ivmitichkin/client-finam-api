@@ -18,18 +18,35 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Builder
 public class OrderStateDTO {
+
     @JsonProperty("order_id")
     private String orderId;
+
     @JsonProperty("exec_id")
     private String execId;
+
     @JsonProperty("status")
     private OrderStatusEnum status;
+
     @JsonProperty("order")
     private OrderDTO order;
+
     @JsonProperty("transact_at")
     private OffsetDateTime transactAt;
+
     @JsonProperty("accept_at")
     private OffsetDateTime acceptAt;
+
     @JsonProperty("withdraw_at")
     private OffsetDateTime withdrawAt;
+
+    @JsonProperty("initial_quantity")
+    private ValueObjectDTO initialQuantity;
+
+    @JsonProperty("executed_quantity")
+    private ValueObjectDTO executedQuantity;
+
+    @JsonProperty("remaining_quantity")
+    private ValueObjectDTO remainingQuantity;
+
 }

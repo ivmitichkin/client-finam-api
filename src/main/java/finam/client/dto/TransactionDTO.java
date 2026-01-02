@@ -18,6 +18,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Builder
 public class TransactionDTO {
+
     @JsonProperty("id")
     private String id;
 
@@ -41,4 +42,8 @@ public class TransactionDTO {
 
     @JsonProperty("transaction_name")
     private String transactionName;
+
+    @JsonProperty("change_qty")
+    private String changeQty;
+
 }
